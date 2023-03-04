@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FileUpload from "./FileUpload";
-//import GoogleSlidesPresenter from "./GoogleSlidesPresenter";
+//import GoogleSlidesPres from "./GoogleSlidesPres";
 
 function App() {
   const [script, setScript] = useState("");
@@ -42,7 +42,7 @@ function App() {
   }
 
   async function handleSummarize () {
-    //makes http request to server on exposed end point
+    //makes http request to server on exposed endpoint
     const response = await fetch("http://localhost:5000/summarize", {
       method: "POST",
       headers: {
@@ -55,17 +55,18 @@ function App() {
     const data = await response.json();
     console.log(data);
     //split the json reponse by dashes into an array 
-    const pointsArray = data.data.split("-");
+    const pointsArray = data.data.split("~");
     setSummaryPoints(pointsArray);
     setScript("");
   }
 
+  
 
   return (
     <div>
       <h1>Google Slides Automator</h1>
       <FileUpload onFileUploaded={handleFileUploaded} />
-      {/* <GoogleSlidesPresenter summaryPoints={summaryPoints} />  */}
+      {/*<GoogleSlidesPres />  */}
       <br/>
       <strong>OR</strong>
       <p>Paste the script here</p>
