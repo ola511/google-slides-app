@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import FileUpload from "./FileUpload";
-//import GoogleSlidesPresenter from "./GoogleSlidesPresenter";
+//import GoogleSlidesPres from "./GoogleSlidesPres";
 
 function App() {
   const [script, setScript] = useState("");
   const [summaryPoints, setSummaryPoints] = useState([]);
   //const [fileContents, setFileContents] = useState("");
   const [input, setInput] = useState("");
+  const [title, setTitle] = useState("");
 
   //only works for txt files
   const handleFileUploaded = (file) => {
     const reader = new FileReader();
 
     reader.onload = () => {
-        const contents = reader.result;
-        setScript(contents);
+      const contents = reader.result;
+      setScript(contents);
     }
 
     reader.readAsText(file);
@@ -23,13 +24,18 @@ function App() {
 
   const handleChange = (event) => {
     setInput(event.target.value);
-    setScript(input);
+    setScript(event.target.value);
+  }
+
+  const handleChangeTitle= (event) => {
+    setTitle(event.target.value);
   }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setScript(input);
+    setScript(event.target.value);
     setInput("");
+    setTitle("");
     handleSummarize();
 
   };
@@ -41,8 +47,8 @@ function App() {
     setScript(newValue);
   }
 
-  async function handleSummarize () {
-    //makes http request to server on exposed end point
+  async function handleSummarize() {
+    //makes http request to server on exposed endpoint
     const response = await fetch("http://localhost:5000/summarize", {
       method: "POST",
       headers: {
@@ -53,32 +59,58 @@ function App() {
       })
     });
     const data = await response.json();
-    console.log(data);
     //split the json reponse by dashes into an array 
-    const pointsArray = data.data.split("-");
+    const pointsArray = data.data;
     setSummaryPoints(pointsArray);
     setScript("");
+    handleCreate(title);
   }
+
+  async function handleCreate(title){
+    //makes http request to create presentation
+    try {
+      const response = await fetch('http://localhost:5000/create-presentation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title }),
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 
 
   return (
     <div>
       <h1>Google Slides Automator</h1>
       <FileUpload onFileUploaded={handleFileUploaded} />
-      {/* <GoogleSlidesPresenter summaryPoints={summaryPoints} />  */}
-      <br/>
+      {/*<GoogleSlidesPres />  */}
+      <br />
       <strong>OR</strong>
-      <p>Paste the script here</p>
+      <p>Paste the script below</p>
       <form onSubmit={handleSubmit}>
-      <textarea 
-      type="text"
-      placeholder="Enter Script"
-      cols={80}
-      rows={10}
-      onChange={handleChange} 
-      onPaste={handlePaste}
-      value={input}/><br />
-      {input !== "" ? (<button type="submit">Submit</button>) : null}
+        <strong>Title: </strong>
+        <input
+        type="text"
+        placeholder="Enter Title"
+        onChange={handleChangeTitle}
+        value={title}>
+        </input><br /><br/>
+        <strong>Script: </strong>
+        <textarea
+          type="text"
+          placeholder="Enter Script"
+          cols={80}
+          rows={10}
+          onChange={handleChange}
+          onPaste={handlePaste}
+          value={input} /><br />
+        <button type="submit" disabled={input === ""} >Submit</button>
       </form>
       <ul>
         {summaryPoints.map((point, index) => (
@@ -86,7 +118,7 @@ function App() {
         ))}
       </ul>
     </div>
-    
+
   );
 }
 
