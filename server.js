@@ -41,12 +41,12 @@ app.post("/summarize", async (req, res) => {
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: `Summarize the following text into important points for a presentation, separate each point with a '~' instead of numbers: ${prompt}`,
+      prompt: `Summarize the following text into important points for a presentation, separate each point with a ':::' instead of numbers: ${prompt}`,
       max_tokens: 1000,
       temperature: 0.5,
     });
 
-    const pointsRough = response.data.choices[0].text.split('~');
+    const pointsRough = response.data.choices[0].text.split(':::');
     points = pointsRough.slice(1);
 
     res.json({
@@ -71,11 +71,17 @@ app.post("/create-presentation", async (req, res) => {
 
     const client = await authorize();
     const presentation = await createPresentation(client, title);
-    let numSlides = ~~(points.length/3) + 1; //gets the amount of slides based on points generated for 3 points in a slide, adds 1 for end slide
-    //adds 1 more slide in the case that there are still remaining points
+
     if (points.length%3 !== 0){
-      numSlides+1;
-    }
+      const remainder = 3 - points.length%3;
+      for (let q = 0;q < remainder; q++){
+        points.push("");
+      }
+      }
+
+    let numSlides = ~~(points.length/3); //gets the amount of slides based on points generated for 3 points in a slide, adds 1 for end slide
+    //adds 1 more slide in the case that there are still remaining points
+
 
     for (let i = 0; i < numSlides; i++){
     await createSlide(client, presentation.data.presentationId, i);
