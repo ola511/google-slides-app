@@ -110,7 +110,7 @@ function App() {
           onChange={handleChange}
           onPaste={handlePaste}
           value={input} /><br />
-        {input !== "" ? (<button type="submit">Submit</button>) : null}
+        <button type="submit" disabled={input === ""} >Submit</button>
       </form>
       <ul>
         {summaryPoints.map((point, index) => (
