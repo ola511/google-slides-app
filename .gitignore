@@ -1,3 +1,6 @@
 server.js
 node_modules
 GoogleSlidesPres.js
+credentials.json
+token.json
+.env
