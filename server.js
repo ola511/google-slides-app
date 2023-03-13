@@ -77,15 +77,15 @@ app.post("/create-presentation", async (req, res) => {
       for (let q = 0;q < remainder; q++){
         points.push("");
       }
-      }
+    }
 
-    let numSlides = ~~(points.length/3); //gets the amount of slides based on points generated for 3 points in a slide, adds 1 for end slide
-    //adds 1 more slide in the case that there are still remaining points
-
+    let numSlides = ~~(points.length/3); //gets the amount of slides based on points generated for 3 points in a slide
+    let titlePageIndex = "p"
 
     for (let i = 0; i < numSlides; i++){
     await createSlide(client, presentation.data.presentationId, i);
     }
+    //await updateTitleText(client, presentation.data.presentationId, titlePageIndex, title);
     //await createTextboxWithText(client, presentation.data.presentationId, 'p', title); //first slide
     for (let i = 0; i < numSlides; i++){
       await createTextboxWithText(client, presentation.data.presentationId, i, points[i*3], points[i*3+1], points[i*3+2]);
@@ -212,24 +212,14 @@ async function createTextboxWithText(client, presentationId, slideIndex, point1,
   const pageObjectId = `Slide_${slideIndex}`;
   const elementId = `MyTextBox_${slideIndex}`;
   const pt400 = {
-    magnitude: 350,
+    magnitude: 400,
     unit: 'PT',
   };
   const pt250 = {
     magnitude: 250,
     unit: 'PT',
   };
-  let text = "";
-  //point1 + "\n\n\n" + point2 + "\n\n\n" + point3;
-  if (!point1){
-    text+=point1 + "\n"
-  }
-  if (!point2){
-    text+=point2 + "\n"
-  }
-  if (!point3){
-    text+=point3 
-  }
+
   const requests = [
     {
       createShape: {
@@ -271,6 +261,38 @@ async function createTextboxWithText(client, presentationId, slideIndex, point1,
       createTextboxWithTextResponse.data.replies[0].createShape;
     console.log(`Created textbox with ID: ${createShapeResponse.objectId}`);
     return createTextboxWithTextResponse.data;
+  } catch (err) {
+    // TODO (developer) - Handle exception
+    throw err;
+  }
+}
+
+//create a textbox in the slide and add point data
+async function updateTitleText(client, presentationId, titlePageIndex, title) {
+  const {google} = require('googleapis');
+
+  const slides = google.slides({version: 'v1', auth: client});
+  
+  const requests = [
+    // Insert text into the box, using the supplied element ID.
+    {
+      insertText: {
+        objectId: "Object_"+titlePageIndex,
+        insertionIndex: 0,
+        text: title,
+      },
+    },
+  ];
+  // Execute the request.
+  try {
+    const updateTitleText =
+      await slides.presentations.batchUpdate({
+        presentationId,
+        resource: {requests},
+      });
+
+    console.log(`Updated text with title: ${title}`);
+    return updateTitleText.data;
   } catch (err) {
     // TODO (developer) - Handle exception
     throw err;
