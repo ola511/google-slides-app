@@ -1,10 +1,22 @@
-# Getting Started with Create React App
+STEPS TO RUN APP:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### `npm install --legacy-peer-deps`
 
-## Available Scripts
+Installs all of the required dependencies some of which require an older version of React.
 
-In the project directory, you can run:
+**Change the default port**
+
+package.json >> "scripts" >> "start": "PORT=3006 react-scripts start
+
+The deafult port may need to be changed if you are getting an error that http://localhost:3000 is already being used.
+
+**Create .env file in the src folder containing the OPENAI API KEY**
+
+OPENAI_API_KEY=Replace with your api key
+
+Note: OPENAI_API_KEY may need to be hard coded into the config variable in the server.js file IF the app is unable to read the .env file
+
+**credentials.json file needs to be added to the project files**
 
 ### `npm start`
 
@@ -13,6 +25,17 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+### `node.js`
+
+Runs the server on port 5000.
+
+On the applications first launch, it will prompt the user to choose a google account, then it will create a token.json file with the saved credentials and will not require a log in after that.
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### `npm test`
 
