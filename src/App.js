@@ -61,23 +61,32 @@ function App() {
         prompt: script
       })
     });
-    const data = await response.json();
+    const aiResponse = await response.json();
     //split the json reponse by dashes into an array 
-    const pointsArray = data.data;
-    setSummaryPoints(pointsArray);
+    console.log(aiResponse);
+    let pointsArray = aiResponse.data.text.split(':::').slice(1);
+    if (pointsArray.length%3 !== 0){
+      const remainder = 3 - pointsArray.length%3;
+      for (let q = 0;q < remainder; q++){
+        pointsArray.push("");
+      }
+    }
+
     setScript("");
-    handleCreate(title);
+    handleCreate(title, pointsArray);
+ 
   }
 
-  async function handleCreate(title){
+  async function handleCreate(title, summaryPoints){
     //makes http request to create presentation
+    console.log(title, summaryPoints);
     try {
       const response = await fetch('http://localhost:5000/create-presentation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title, summaryPoints }),
       });
       const presentation = await response.json();
       setPresId(presentation.data.presentationId);

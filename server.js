@@ -32,7 +32,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-let points = [];
 //Set up Endpoint for ChatGPT
 app.post("/summarize", async (req, res) => {
 
@@ -46,11 +45,10 @@ app.post("/summarize", async (req, res) => {
       temperature: 0.5,
     });
 
-    const pointsRough = response.data.choices[0].text.split(':::');
-    points = pointsRough.slice(1);
+    const aiResponse = response.data.choices[0];
 
     res.json({
-      data: points,
+      data: aiResponse,
     })
   }
   catch (error) {
@@ -67,17 +65,10 @@ app.post("/create-presentation", async (req, res) => {
 
   
   try {
-    const { title } = req.body;
+    const { title, summaryPoints : points } = req.body;
 
     const client = await authorize();
     const presentation = await createPresentation(client, title);
-
-    if (points.length%3 !== 0){
-      const remainder = 3 - points.length%3;
-      for (let q = 0;q < remainder; q++){
-        points.push("");
-      }
-    }
 
     let numSlides = ~~(points.length/3); //gets the amount of slides based on points generated for 3 points in a slide
     let titlePageIndex = "p"
