@@ -8,6 +8,9 @@ function App() {
   //const [fileContents, setFileContents] = useState("");
   const [input, setInput] = useState("");
   const [title, setTitle] = useState("");
+  const [presId, setPresId] = useState("");
+
+  let url = "https://docs.google.com/presentation/d/" + presId + "/edit#slide=id.p";
 
   //only works for txt files
   const handleFileUploaded = (file) => {
@@ -76,11 +79,14 @@ function App() {
         },
         body: JSON.stringify({ title }),
       });
-      const data = await response.json();
-      return data;
+      const presentation = await response.json();
+      setPresId(presentation.data.presentationId);
+
+      return presentation;
     } catch (error) {
       console.error(error);
     }
+
   }
 
 
@@ -112,11 +118,7 @@ function App() {
           value={input} /><br />
         <button type="submit" disabled={input === ""} >Submit</button>
       </form>
-      <ul>
-        {summaryPoints.map((point, index) => (
-          <li key={index}>{point}</li>
-        ))}
-      </ul>
+      { (presId !== "") ? <a href={url}>Your presentation has been generated!</a> : null}
     </div>
 
   );

@@ -86,7 +86,6 @@ app.post("/create-presentation", async (req, res) => {
     await createSlide(client, presentation.data.presentationId, i);
     }
     //await updateTitleText(client, presentation.data.presentationId, titlePageIndex, title);
-    //await createTextboxWithText(client, presentation.data.presentationId, 'p', title); //first slide
     for (let i = 0; i < numSlides; i++){
       await createTextboxWithText(client, presentation.data.presentationId, i, points[i*3], points[i*3+1], points[i*3+2]);
     }
@@ -267,36 +266,34 @@ async function createTextboxWithText(client, presentationId, slideIndex, point1,
   }
 }
 
-//create a textbox in the slide and add point data
+//update title in the titlepage textbox
 async function updateTitleText(client, presentationId, titlePageIndex, title) {
-  const {google} = require('googleapis');
+  const { google } = require("googleapis");
+  const slides = google.slides({ version: "v1", auth: client });
 
-  const slides = google.slides({version: 'v1', auth: client});
-  
-  const requests = [
-    // Insert text into the box, using the supplied element ID.
-    {
+
+  try {
+    const res = await slides.presentations.get({
+      presentationId: presentationId,
+    });
+    const titlePageObjectId = res.data.titlePageIndex.objectId; // assumes title page is the first slide
+    const requests = [{
       insertText: {
-        objectId: "Object_"+titlePageIndex,
-        insertionIndex: 0,
+        objectId: titlePageObjectId,
         text: title,
       },
-    },
-  ];
-  // Execute the request.
-  try {
-    const updateTitleText =
-      await slides.presentations.batchUpdate({
-        presentationId,
-        resource: {requests},
-      });
-
-    console.log(`Updated text with title: ${title}`);
-    return updateTitleText.data;
+    }];
+    await slides.presentations.batchUpdate({
+      presentationId: presentationId,
+      requestBody: {
+        requests: requests,
+      },
+    });
+    console.log('Title added to title page.');
   } catch (err) {
-    // TODO (developer) - Handle exception
-    throw err;
+    console.error('Error adding text to title page:', err);
   }
+
 }
 
 //server listening on port 5000
