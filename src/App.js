@@ -4,7 +4,7 @@ import FileUpload from "./FileUpload";
 
 function App() {
   const [script, setScript] = useState("");
-  const [summaryPoints, setSummaryPoints] = useState([]);
+  //const [summaryPoints, setSummaryPoints] = useState([]);
   //const [fileContents, setFileContents] = useState("");
   const [input, setInput] = useState("");
   const [title, setTitle] = useState("");
