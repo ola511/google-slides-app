@@ -1,4 +1,5 @@
 import React from "react";
+import { Heading } from '@chakra-ui/react'
 
 function FileUpload({ onFileUploaded }) {
   function handleFileChange(event) {
@@ -13,7 +14,7 @@ function FileUpload({ onFileUploaded }) {
 
   return (
     <div>
-      <p>Upload a file with your script</p>
+      <Heading>Upload a file with your script</Heading><br />
       <input type="file" onChange={handleFileChange} />
     </div>
   );

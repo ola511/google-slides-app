@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FileUpload from "./FileUpload";
+import { Button, Input, Textarea, Center, Text, Heading, useToast } from '@chakra-ui/react'
 //import GoogleSlidesPres from "./GoogleSlidesPres";
 
 function App() {
@@ -98,26 +99,29 @@ function App() {
 
   }
 
-
+const toast = useToast();
 
   return (
     <div>
-      <h1>Google Slides Automator</h1>
+      <Center bg='black' h='100px' color='white'><Text fontSize='5xl'>Google Slides Automator</Text></Center><br />
+      <Center>
       <FileUpload onFileUploaded={handleFileUploaded} />
-      {/*<GoogleSlidesPres />  */}
+      </Center>
       <br />
-      <strong>OR</strong>
-      <p>Paste the script below</p>
+      <Center><Heading>OR</Heading></Center><br />
+      <Center>
+      <Heading>Paste the script below</Heading><br />
+      </Center>
       <form onSubmit={handleSubmit}>
         <strong>Title: </strong>
-        <input
+        <Input
         type="text"
         placeholder="Enter Title"
         onChange={handleChangeTitle}
         value={title}>
-        </input><br /><br/>
+        </Input><br /><br/>
         <strong>Script: </strong>
-        <textarea
+        <Textarea
           type="text"
           placeholder="Enter Script"
           cols={80}
@@ -125,9 +129,18 @@ function App() {
           onChange={handleChange}
           onPaste={handlePaste}
           value={input} /><br />
-        <button type="submit" disabled={input === ""} >Submit</button>
+        <Button type="submit" disabled={input === ""} >Submit</Button>
       </form>
-      { (presId !== "") ? <a href={url}>Your presentation has been generated!</a> : null}
+      <Center>
+        
+      { (presId !== "") ? toast({
+          title: 'Hooray!!!',
+          description: "Presentation has been created!",
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        }) : null}
+      </Center>
     </div>
 
   );
