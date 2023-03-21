@@ -132,7 +132,6 @@ const toast = useToast();
         <Button type="submit" disabled={input === ""} >Submit</Button>
       </form>
       <Center>
-        
       { (presId !== "") ? toast({
           title: 'Hooray!!!',
           description: "Presentation has been created!",
