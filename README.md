@@ -4,11 +4,11 @@ STEPS TO RUN APP:
 
 Installs all of the required dependencies some of which require an older version of React.
 
-**Change the default port**
-
-package.json >> "scripts" >> "start": "PORT=3006 react-scripts start
+**OPTIONAL: Change the default port**
 
 The default port may need to be changed if you are getting an error that http://localhost:3000 is already being used.
+
+package.json >> "scripts" >> "start": "PORT=3006 react-scripts start
 
 **Create .env file in the src folder containing the OPENAI API KEY**
 
