@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import FileUpload from "./FileUpload";
-import { Button, Input, Textarea, Center, Text, Heading, useToast } from '@chakra-ui/react'
-//import GoogleSlidesPres from "./GoogleSlidesPres";
+import { Button, Input, Textarea, Center, Text, Heading, useToast, Container } from '@chakra-ui/react'
 
 function App() {
   const [script, setScript] = useState("");
@@ -103,6 +102,7 @@ const toast = useToast();
 
   return (
     <div>
+      <Container maxW={'700px'}>
       <Center bg='black' h='100px' color='white'><Text fontSize='5xl'>Google Slides Automator</Text></Center><br />
       <Center>
       <FileUpload onFileUploaded={handleFileUploaded} />
@@ -134,12 +134,13 @@ const toast = useToast();
       <Center>
       { (presId !== "") ? toast({
           title: 'Hooray!!!',
-          description: "Presentation has been created!",
+          description: `Presentation has been created! ${url}`,
           status: 'success',
           duration: 5000,
           isClosable: true,
         }) : null}
       </Center>
+      </Container>
     </div>
 
   );
