@@ -9,6 +9,7 @@ import {
   Heading,
   useToast,
   Container,
+  Link,
 } from "@chakra-ui/react";
 
 function App() {
@@ -163,7 +164,11 @@ function App() {
           {presId !== ""
             ? toast({
                 title: "Hooray!!!",
-                description: `Presentation has been created! ${url}`,
+                description: `Presentation has been created! ${(
+                  <Link href={url} isExternal>
+                    Click here to view
+                  </Link>
+                )}`,
                 status: "success",
                 duration: 5000,
                 isClosable: true,
