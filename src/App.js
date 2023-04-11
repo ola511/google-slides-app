@@ -164,11 +164,14 @@ function App() {
           {presId !== ""
             ? toast({
                 title: "Hooray!!!",
-                description: `Presentation has been created! ${(
-                  <Link href={url} isExternal>
-                    Click here to view
-                  </Link>
-                )}`,
+                description: (
+                  <>
+                    Presentation has been created!{" "}
+                    <Link href={url} isExternal>
+                      Click here to view
+                    </Link>
+                  </>
+                ),
                 status: "success",
                 duration: 5000,
                 isClosable: true,
