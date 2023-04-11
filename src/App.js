@@ -74,7 +74,7 @@ function App() {
       }),
     });
     const aiResponse = await response.json();
-    //split the json reponse by dashes into an array
+    //split the json reponse by colons into an array
     console.log(aiResponse);
     let pointsArray = aiResponse.data.text.split(":::").slice(1);
     if (pointsArray.length % 3 !== 0) {
@@ -114,72 +114,70 @@ function App() {
   const toast = useToast();
 
   return (
-    <div>
-      <Container minW="700" bg="gray.700">
-        <Center bg="black" h="100px" color="white">
-          <Text fontSize="5xl">Google Slides Automator</Text>
-        </Center>
+    <Container minW="700" bg="gray.800">
+      <Center bg="black" h="100px" color="white">
+        <Text fontSize="5xl">Google Slides Automator</Text>
+      </Center>
+      <br />
+      <Center>
+        <FileUpload onFileUploaded={handleFileUploaded} />
+      </Center>
+      <br />
+      <Center>
+        <Heading>OR</Heading>
+      </Center>
+      <br />
+      <Center>
+        <Heading>Paste the script below</Heading>
+        <br />
+      </Center>
+      <form onSubmit={handleSubmit}>
+        <strong>Title: </strong>
+        <Input
+          type="text"
+          placeholder="Enter Title"
+          onChange={handleChangeTitle}
+          value={title}
+        ></Input>
+        <br />
+        <br />
+        <strong>Script: </strong>
+        <Textarea
+          type="text"
+          placeholder="Enter Script"
+          cols={80}
+          rows={10}
+          onChange={handleChange}
+          onPaste={handlePaste}
+          value={input}
+        />
+        <br />
         <br />
         <Center>
-          <FileUpload onFileUploaded={handleFileUploaded} />
+          <Button type="submit" disabled={input === ""}>
+            Submit
+          </Button>
         </Center>
-        <br />
-        <Center>
-          <Heading>OR</Heading>
-        </Center>
-        <br />
-        <Center>
-          <Heading>Paste the script below</Heading>
-          <br />
-        </Center>
-        <form onSubmit={handleSubmit}>
-          <strong>Title: </strong>
-          <Input
-            type="text"
-            placeholder="Enter Title"
-            onChange={handleChangeTitle}
-            value={title}
-          ></Input>
-          <br />
-          <br />
-          <strong>Script: </strong>
-          <Textarea
-            type="text"
-            placeholder="Enter Script"
-            cols={80}
-            rows={10}
-            onChange={handleChange}
-            onPaste={handlePaste}
-            value={input}
-          />
-          <br />
-          <br />
-          <Center>
-            <Button type="submit" disabled={input === ""}>
-              Submit
-            </Button>
-          </Center>
-        </form>
-        <Center>
-          {presId !== ""
-            ? toast({
-                title: "Hooray!!!",
-                description: (
-                  <>
-                    Presentation has been created!{" "}
-                    <Link href={url} isExternal>
-                      Click here to view
-                    </Link>
-                  </>
-                ),
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-              }) && setPresId("")
-            : null}
-        </Center>
-      </Container>
-    </div>
+      </form>
+      <Center>
+        {presId !== ""
+          ? toast({
+              title: "Hooray!!!",
+              description: (
+                <>
+                  Presentation has been created!
+                  <Link href={url} isExternal>
+                    Click here to view
+                  </Link>
+                </>
+              ),
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+            }) && setPresId("")
+          : null}
+      </Center>
+    </Container>
   );
 }
 
